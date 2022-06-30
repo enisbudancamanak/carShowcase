@@ -6,8 +6,6 @@
 
 	$: if ($gltf) {
 		carModel.set($gltf);
-
-		console.log('TESt');
 	}
 </script>
 

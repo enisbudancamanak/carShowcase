@@ -1,16 +1,54 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
+	import { carColor, entryAnimationRunning } from '../store/stores';
 
 	let carModel;
 	onMount(async () => {
 		carModel = (await import('../components/Car/CanvasCar.svelte')).default;
 	});
 
+	function changeCarColor(color) {
+		carColor.set(color);
+	}
+
 	onMount(() => {});
 </script>
 
-<div class="top-0 left-0 !outline-none !border-none z-0">
-	<svelte:component this={carModel} />
+<div id="content" class="relative w-screen min-h-screen px-4">
+	<div class="top-0 left-0 !outline-none !border-none z-0">
+		<svelte:component this={carModel} />
+	</div>
+
+	<div class="relative z-10 flex justify-center">
+		<h1 class="mt-16 text-white text-7xl font-Scion">SCION</h1>
+	</div>
+
+	<div class="absolute flex gap-4 right-8 bottom-8">
+		<div class="avatar">
+			<div
+				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#202124] cursor-pointer"
+				on:click={() => changeCarColor('#202124')}
+			/>
+		</div>
+		<div class="avatar">
+			<div
+				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#ff03ed] cursor-pointer"
+				on:click={() => changeCarColor('#ff03ed')}
+			/>
+		</div>
+		<div class="avatar">
+			<div
+				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#ffc91f] cursor-pointer"
+				on:click={() => changeCarColor('#ffc91f')}
+			/>
+		</div>
+		<div class="avatar">
+			<div
+				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#da1918] cursor-pointer"
+				on:click={() => changeCarColor('#da1918')}
+			/>
+		</div>
+	</div>
 </div>
 
 <style>

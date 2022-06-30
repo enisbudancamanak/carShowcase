@@ -6,6 +6,8 @@
 	import Car from './Car.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { DEG2RAD } from 'three/src/math/MathUtils';
+	import Background from './Background.svelte';
+	import { carColor } from '../../store/stores';
 
 	import {
 		Canvas,
@@ -13,9 +15,9 @@
 		HemisphereLight,
 		CameraInstance,
 		AmbientLight,
-		SpotLight,
 		OrbitControls,
-		Mesh
+		Mesh,
+		SpotLight
 	} from 'threlte';
 
 	onMount(() => {});
@@ -23,7 +25,7 @@
 	let cameraVariable = new PerspectiveCamera(
 		50,
 		window.innerWidth / window.innerHeight,
-		0.01,
+		0.001,
 		1000.0
 	);
 </script>
@@ -35,21 +37,37 @@
 			camera={cameraVariable}
 			useCamera={true}
 			viewportAware={true}
-			position={{ x: 20, y: 12, z: 50 }}
+			position={{ x: 10, y: 3, z: 50 }}
 		>
 			<OrbitControls autoRotate={false} enableZoom={true} target={{ z: -5, y: -3.2, x: 0 }} />
 		</CameraInstance>
 
-		<AmbientLight color={0xffffff} intensity={0.1} />
+		<!-- <AmbientLight color={0xffffff} intensity={1} /> -->
 
-		<!-- <HemisphereLight skyColor={0xff03ed} groundColor={0xff03ed} intensity={1} /> -->
+		<HemisphereLight skyColor={0xffeeb1} groundColor={0x080820} intensity={4} />
 
-		<DirectionalLight
+		<SpotLight
+			shadow
+			position={{ x: 0, y: 40, z: 50 }}
+			color={'#ffffff'}
+			target={{ x: 0, y: -10, z: -10 }}
+			intensity={4}
+		/>
+
+		<SpotLight
+			shadow
+			position={{ x: 0, y: 40, z: -10 }}
+			color={$carColor}
+			target={{ x: 0, y: -10, z: -10 }}
+			intensity={4}
+		/>
+
+		<!-- <DirectionalLight
 			shadow
 			intensity={0.2}
 			position={{ z: -10, y: 6, x: -3 }}
 			target={{ x: 0, y: -10, z: -10 }}
-			color={'#161616'}
+			color={'#ff03ed'}
 		/>
 
 		<DirectionalLight
@@ -58,8 +76,9 @@
 			position={{ z: -10, y: 6, x: 3 }}
 			target={{ x: 0, y: -10, z: -10 }}
 			color={'#ffffff'}
-		/>
+		/> -->
 
 		<Car />
+		<Background />
 	</Canvas>
 </div>

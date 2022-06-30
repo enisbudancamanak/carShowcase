@@ -3,10 +3,14 @@ const config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			fontFamily: {
+				Scion: ['Scion', 'sans-serif']
+			}
+		}
 	},
 
-	plugins: []
+	plugins: [require('daisyui')]
 };
 
 module.exports = config;
