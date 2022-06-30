@@ -37,9 +37,9 @@
 			camera={cameraVariable}
 			useCamera={true}
 			viewportAware={true}
-			position={{ x: 10, y: 3, z: 50 }}
+			position={{ x: 0, y: 3, z: 50 }}
 		>
-			<OrbitControls autoRotate={false} enableZoom={true} target={{ z: -5, y: -3.2, x: 0 }} />
+			<OrbitControls autoRotate={false} enableZoom={true} />
 		</CameraInstance>
 
 		<!-- <AmbientLight color={0xffffff} intensity={1} /> -->
@@ -48,10 +48,18 @@
 
 		<SpotLight
 			shadow
-			position={{ x: 0, y: 40, z: 50 }}
+			position={{ x: 0, y: -20, z: 50 }}
 			color={'#ffffff'}
-			target={{ x: 0, y: -10, z: -10 }}
-			intensity={4}
+			target={{ x: 0, y: -10, z: -100 }}
+			intensity={1}
+		/>
+
+		<SpotLight
+			shadow
+			position={{ x: 0, y: 30, z: 50 }}
+			color={$carColor}
+			target={{ x: 0, y: -10, z: -100 }}
+			intensity={1}
 		/>
 
 		<SpotLight

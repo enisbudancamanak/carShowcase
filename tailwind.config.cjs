@@ -9,7 +9,31 @@ const config = {
 			}
 		}
 	},
+	daisyui: {
+		themes: [
+			{
+				mytheme: {
+					primary: '#000000',
 
+					secondary: '#6D3A9C',
+
+					accent: '#51A800',
+
+					neutral: '#000000',
+
+					'base-100': '#000000',
+
+					info: '#2463EB',
+
+					success: '#16A249',
+
+					warning: '#DB7706',
+
+					error: '#DC2828'
+				}
+			}
+		]
+	},
 	plugins: [require('daisyui')]
 };
 

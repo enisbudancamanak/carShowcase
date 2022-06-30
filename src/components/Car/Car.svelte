@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 	import { Object3DInstance, Mesh, MeshInstance } from 'threlte';
 	import { useThrelte, useFrame } from 'threlte';
-	import { carColor, entryAnimationRunning } from '../../store/stores';
+	import { carColor, entryAnimationRunning, pauseAnimation } from '../../store/stores';
 
 	import {
 		CircleBufferGeometry,
@@ -17,7 +17,8 @@
 		Mesh as Meshi,
 		RepeatWrapping,
 		TextureLoader,
-		ReinhardToneMapping
+		ReinhardToneMapping,
+		PlaneBufferGeometry
 	} from 'three';
 
 	import { carModel } from '../../store/stores.js';
@@ -36,6 +37,7 @@
 	let tl = gsap.timeline({});
 
 	let mesh = new Meshi();
+	let wallMesh = new Meshi();
 
 	const floorMaterial = {
 		metalness: 0.8,
@@ -46,6 +48,14 @@
 	};
 
 	$: checkColorChange($carColor);
+
+	$: checkPause($pauseAnimation);
+
+	// @ts-ignore
+	function checkPause(pause) {
+		if (pause) tl.pause();
+		else tl.resume();
+	}
 
 	// @ts-ignore
 	function checkColorChange(color) {
@@ -97,7 +107,11 @@
 				o.name != 'DesireFX_ME_Scion_symbol_rear_part1' &&
 				o.name != 'DesireFX_ME_Headlight_rear_glass' &&
 				o.name != 'DesireFX_ME_Seat' &&
-				o.name != 'DesireFX_ME_Text_xB'
+				o.name != 'DesireFX_ME_Text_xB' &&
+				o.name != 'DesireFX_ME_Tire_left_front' &&
+				o.name != 'DesireFX_ME_Tire_left_front01' &&
+				o.name != 'DesireFX_ME_Tire_left_front02' &&
+				o.name != 'DesireFX_ME_Tire_left_front03'
 			)
 				o.material = new MeshPhysicalMaterial(carMaterial);
 
@@ -106,14 +120,53 @@
 				o.material.opacity = 0.1;
 			}
 
+			// if (
+			// 	o.name == 'DesireFX_ME_Headlight_front_glass' ||
+			// 	o.name == 'DesireFX_ME_Headlight_rear_glass'
+			// ) {
+			// 	o.material = new MeshStandardMaterial({
+			// 		color: '#ffffff',
+			// 		emissive: 0xffffff,
+			// 		emissiveIntensity: 10
+			// 	});
+			// }
+
 			if (
-				o.name == 'DesireFX_ME_Headlight_front_glass' &&
-				o.name == 'DesireFX_ME_Headlight_rear_glass' &&
-				o.name == 'DesireFX_ME_Scion_symbol_front_part1' &&
-				o.name == 'DesireFX_ME_Scion_symbol_rear_part1' &&
+				o.name == 'DesireFX_ME_Scion_symbol_front_part1' ||
+				o.name == 'DesireFX_ME_Scion_symbol_rear_part1' ||
 				o.name == 'DesireFX_ME_Text_xB'
 			) {
-				o.material = new MeshStandardMaterial({ color: '#ffffff', roughness: 1, metalness: 0 });
+				o.material = new MeshStandardMaterial({
+					color: '#ffffff',
+					roughness: 1,
+					metalness: 0
+				});
+			}
+
+			if (
+				o.name == 'DesireFX_ME_Tire_left_front' ||
+				o.name == 'DesireFX_ME_Tire_left_front01' ||
+				o.name == 'DesireFX_ME_Tire_left_front02' ||
+				o.name == 'DesireFX_ME_Tire_left_front03'
+			) {
+				o.material = new MeshStandardMaterial({
+					color: '#000000',
+					roughness: 0.8,
+					metalness: 0.2
+				});
+			}
+
+			if (
+				o.name == 'DesireFX_ME_Rim_Left_Front_part1' ||
+				o.name == 'DesireFX_ME_Rim_Left_Front_part04' ||
+				o.name == 'DesireFX_ME_Rim_Left_Front_part06' ||
+				o.name == 'DesireFX_ME_Rim_Left_Front_part08'
+			) {
+				o.material = new MeshStandardMaterial({
+					color: '#A4A8AF',
+					roughness: 0.8,
+					metalness: 0.8
+				});
 			}
 
 			if (o.name == 'DesireFX_ME_Seat') {
@@ -123,13 +176,27 @@
 	}
 
 	function registerEntryAnimation() {
-		gltf.scene.children[19].material.opacity = 0;
-		gltf.scene.children[19].material.transparent = true;
+		gltf.scene.children[19].material = new MeshStandardMaterial({
+			opacity: 0,
+			transparent: true,
+			color: '#ffffff',
+			emissive: '#FFFFCC',
+			emissiveIntensity: 10
+		});
+
+		gltf.scene.children[17].material = new MeshStandardMaterial({
+			opacity: 0,
+			transparent: true,
+			color: '#ffffff',
+			emissive: '#FFFFCC',
+			emissiveIntensity: 10
+		});
+
 		tl.from($camera.position, {
 			x: 29.861027480640256,
 			y: -1.739376648254959,
 			z: 9.751223381140683,
-			duration: 3,
+			duration: 5,
 			ease: 'slow(0.7, 0.7, false)',
 			onStart: () => {
 				entryAnimationRunning.set(true);
@@ -142,10 +209,10 @@
 				x: -0.22700967759851307,
 				y: 0.9721812485302048,
 				z: 0.1885588477362553,
-				duration: 2.5,
+				duration: 3,
 				ease: 'slow(0.7, 0.7, false)',
 				onComplete: () => {
-					gsap.to(gltf.scene.children[19].material, {
+					gsap.to([gltf.scene.children[17].material, gltf.scene.children[19].material], {
 						opacity: 1,
 						duration: 1,
 						ease: 'power1.out',
@@ -155,7 +222,7 @@
 					});
 				}
 			},
-			'-=3'
+			'-=5'
 		);
 
 		tl.to($carModel.scene.rotation, {
@@ -277,5 +344,20 @@
 		geometry={new CircleBufferGeometry(1, 72)}
 		material={new MeshPhysicalMaterial(floorMaterial)}
 		scale={{ x: 50, y: 50, z: 50 }}
+	/>
+
+	<Mesh
+		bind:wallMesh
+		receiveShadow
+		position={{ x: 0, y: -10, z: -100 }}
+		rotation={{ z: -90 * (Math.PI / 180) }}
+		geometry={new PlaneBufferGeometry(10, 10)}
+		material={new MeshPhysicalMaterial({
+			metalness: 0.8,
+			roughness: 0.5,
+			color: 0x000000,
+			normalScale: new Vector2(1, 1)
+		})}
+		scale={{ x: 400, y: 300, z: 300 }}
 	/>
 {/if}

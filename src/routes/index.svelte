@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { carColor, entryAnimationRunning } from '../store/stores';
+	import { carColor, entryAnimationRunning, pauseAnimation } from '../store/stores';
 
 	let carModel;
 	onMount(async () => {
@@ -11,8 +11,59 @@
 		carColor.set(color);
 	}
 
+	function toggleAnimation() {
+		pauseAnimation.set(!$pauseAnimation);
+		if ($pauseAnimation) document.querySelector('#pauseText').innerHTML = 'play';
+		else document.querySelector('#pauseText').innerHTML = 'pause';
+	}
+
 	onMount(() => {});
 </script>
+
+<div class="fixed z-50 flex gap-4 right-8 top-8">
+	<div class="avatar placeholder">
+		<div
+			id="pauseText"
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#202124] cursor-pointer font-bold text-sm"
+			on:click={() => toggleAnimation()}
+		>
+			pause
+		</div>
+	</div>
+</div>
+
+<div class="fixed z-50 flex gap-4 right-8 bottom-8">
+	<div class="avatar">
+		<div
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#0d1116] cursor-pointer"
+			on:click={() => changeCarColor('#0d1116')}
+		/>
+	</div>
+	<div class="avatar">
+		<div
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#A4A8AF] cursor-pointer"
+			on:click={() => changeCarColor('#A4A8AF')}
+		/>
+	</div>
+	<div class="avatar">
+		<div
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#ff03ed] cursor-pointer"
+			on:click={() => changeCarColor('#ff03ed')}
+		/>
+	</div>
+	<div class="avatar">
+		<div
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#fbe212] cursor-pointer"
+			on:click={() => changeCarColor('#fbe212')}
+		/>
+	</div>
+	<div class="avatar">
+		<div
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#da1918] cursor-pointer"
+			on:click={() => changeCarColor('#da1918')}
+		/>
+	</div>
+</div>
 
 <div id="content" class="relative w-screen min-h-screen px-4">
 	<div class="top-0 left-0 !outline-none !border-none z-0">
@@ -20,35 +71,18 @@
 	</div>
 
 	<div class="relative z-10 flex justify-center">
-		<h1 class="mt-16 text-white text-7xl font-Scion">SCION</h1>
+		<h1 class="mt-16 text-3xl font-bold text-center text-white lg:text-6xl md:text-5xl font-Scion">
+			SCION XB 2003
+		</h1>
+	</div>
+	<!-- 
+	<div class="relative z-10 flex">
+		<div class="h-screen" />
 	</div>
 
-	<div class="absolute flex gap-4 right-8 bottom-8">
-		<div class="avatar">
-			<div
-				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#202124] cursor-pointer"
-				on:click={() => changeCarColor('#202124')}
-			/>
-		</div>
-		<div class="avatar">
-			<div
-				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#ff03ed] cursor-pointer"
-				on:click={() => changeCarColor('#ff03ed')}
-			/>
-		</div>
-		<div class="avatar">
-			<div
-				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#ffc91f] cursor-pointer"
-				on:click={() => changeCarColor('#ffc91f')}
-			/>
-		</div>
-		<div class="avatar">
-			<div
-				class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#da1918] cursor-pointer"
-				on:click={() => changeCarColor('#da1918')}
-			/>
-		</div>
-	</div>
+	<div class="relative z-10 flex">
+		<div class="h-screen" />
+	</div> -->
 </div>
 
 <style>
