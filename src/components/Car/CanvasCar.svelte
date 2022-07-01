@@ -70,22 +70,6 @@
 			intensity={4}
 		/>
 
-		<!-- <DirectionalLight
-			shadow
-			intensity={0.2}
-			position={{ z: -10, y: 6, x: -3 }}
-			target={{ x: 0, y: -10, z: -10 }}
-			color={'#ff03ed'}
-		/>
-
-		<DirectionalLight
-			shadow
-			intensity={1}
-			position={{ z: -10, y: 6, x: 3 }}
-			target={{ x: 0, y: -10, z: -10 }}
-			color={'#ffffff'}
-		/> -->
-
 		<Car />
 		<Background />
 	</Canvas>

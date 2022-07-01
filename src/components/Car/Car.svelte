@@ -5,7 +5,12 @@
 	import { onMount } from 'svelte';
 	import { Object3DInstance, Mesh, MeshInstance } from 'threlte';
 	import { useThrelte, useFrame } from 'threlte';
-	import { carColor, entryAnimationRunning, pauseAnimation } from '../../store/stores';
+	import {
+		carColor,
+		entryAnimationRunning,
+		pauseAnimation,
+		anotherAnimation
+	} from '../../store/stores';
 
 	import {
 		CircleBufferGeometry,
@@ -35,6 +40,8 @@
 
 	const gltf = $carModel;
 	let tl = gsap.timeline({});
+	let tl2 = gsap.timeline({});
+	let tl3 = gsap.timeline({});
 
 	let mesh = new Meshi();
 	let wallMesh = new Meshi();
@@ -47,16 +54,14 @@
 		normalScale: new Vector2(1, 1)
 	};
 
-	$: checkColorChange($carColor);
-
 	$: checkPause($pauseAnimation);
-
 	// @ts-ignore
 	function checkPause(pause) {
 		if (pause) tl.pause();
 		else tl.resume();
 	}
 
+	$: checkColorChange($carColor);
 	// @ts-ignore
 	function checkColorChange(color) {
 		carMaterial.color = color;
@@ -255,73 +260,55 @@
 		});
 
 		tl.play();
-
-		// useFrame(() => {
-		// 	$carModel.scene.rotation.y += 0.00001;
-		// });
 	}
 
-	// GSAP ScrollTrigger
-	function registerScrollAnimation() {
-		gsap.registerPlugin(ScrollTrigger);
+	$: checkAnotherAnimation($anotherAnimation);
 
-		gsap.to(gltf.scene.scale, {
-			x: 1,
-			y: 1,
-			z: 1,
-			duration: 1.2,
-			ease: 'Back.easeOut'
-		});
+	function checkAnotherAnimation(topView) {
+		if (!$entryAnimationRunning)
+			if (topView) {
+				tl2.to($camera.position, {
+					x: 6.405749622402716,
+					y: 154.60780225324243,
+					z: -25.303750792579514,
+					duration: 4,
+					ease: 'slow(0.7, 0.7, false)'
+				});
 
-		gsap.to(gltf.scene.rotation, {
-			x: -0.08,
-			y: 0,
-			z: 0,
-			duration: 1.8,
-			ease: 'Back.easeOut'
-		});
+				tl2.to(
+					$camera.rotation,
+					{
+						x: -1.5707973237433617,
+						y: 7.806252873970862e-8,
+						z: 3.0634506242981008,
+						duration: 3,
+						ease: 'slow(0.7, 0.7, false)'
+					},
+					'-=4'
+				);
+				tl2.play();
+			} else {
+				tl3.to($camera.position, {
+					x: 0,
+					y: 1,
+					z: 50,
+					duration: 2,
+					ease: 'slow(0.7, 0.7, false)'
+				});
 
-		gsap.to(gltf.scene.position, {
-			x: -0.5,
-			y: -1.5,
-			z: 0,
-			duration: 1.8,
-			ease: 'Back.easeOut',
-			onComplete: () => {
-				animationFinished = true;
+				tl3.to(
+					$camera.rotation,
+					{
+						x: 0,
+						y: 0,
+						z: 0,
+						duration: 2,
+						ease: 'slow(0.7, 0.7, false)'
+					},
+					'-=2'
+				);
+				tl3.play();
 			}
-		});
-
-		gsap.from(gltf.scene.position, {
-			scrollTrigger: {
-				trigger: '#content',
-				start: 'top top',
-				scrub: true,
-				toggleActions: 'restart pause resume pause'
-			},
-			y: -1.5
-		});
-
-		gsap.from(gltf.scene.rotation, {
-			scrollTrigger: {
-				trigger: '#content',
-				start: 'top top',
-				scrub: true,
-				toggleActions: 'restart pause resume pause'
-			},
-			x: -0.08
-		});
-
-		gsap.to(gltf.scene.rotation, {
-			scrollTrigger: {
-				trigger: '#content',
-				start: 'top top',
-				end: 'bottom top',
-				scrub: true,
-				toggleActions: 'restart pause resume pause'
-			},
-			y: Math.PI
-		});
 	}
 </script>
 

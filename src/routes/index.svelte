@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { carColor, entryAnimationRunning, pauseAnimation } from '../store/stores';
+	import {
+		carColor,
+		entryAnimationRunning,
+		pauseAnimation,
+		anotherAnimation
+	} from '../store/stores';
 
 	let carModel;
 	onMount(async () => {
@@ -17,10 +22,14 @@
 		else document.querySelector('#pauseText').innerHTML = 'pause';
 	}
 
+	function toggleViewAnimation() {
+		anotherAnimation.set(!$anotherAnimation);
+	}
+
 	onMount(() => {});
 </script>
 
-<div class="fixed z-50 flex gap-4 right-8 top-8">
+<div class="fixed z-50 flex flex-col gap-4 right-8 top-8">
 	<div class="avatar placeholder">
 		<div
 			id="pauseText"
@@ -28,6 +37,16 @@
 			on:click={() => toggleAnimation()}
 		>
 			pause
+		</div>
+	</div>
+
+	<div class="avatar placeholder">
+		<div
+			id="anotherViewText"
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#202124] text-center cursor-pointer font-bold text-xs"
+			on:click={() => toggleViewAnimation()}
+		>
+			view change
 		</div>
 	</div>
 </div>
