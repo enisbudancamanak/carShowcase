@@ -1,32 +1,28 @@
 <script>
 	import gsap from 'gsap';
-	import { ScrollTrigger } from 'gsap/all';
-
 	import { onMount } from 'svelte';
 	import { Object3DInstance, Mesh, MeshInstance } from 'threlte';
-	import { useThrelte, useFrame } from 'threlte';
+	import { useThrelte } from 'threlte';
 	import {
 		carColor,
-		entryAnimationRunning,
+		animationRunning,
 		pauseAnimation,
-		anotherAnimation
+		anotherAnimation,
+		carModel,
+		wireframe
 	} from '../../store/stores';
 
 	import {
 		CircleBufferGeometry,
 		MeshStandardMaterial,
-		DoubleSide,
 		MeshPhysicalMaterial,
 		Vector2,
 		CanvasTexture,
 		Mesh as Meshi,
 		RepeatWrapping,
-		TextureLoader,
-		ReinhardToneMapping,
 		PlaneBufferGeometry
 	} from 'three';
 
-	import { carModel } from '../../store/stores.js';
 	import { FlakesTexture } from './FlakesTexture';
 
 	//new TextureLoader().load('src/assets/textures/aerial_asphalt_01_diff_4k.jpg')
@@ -65,6 +61,13 @@
 	// @ts-ignore
 	function checkColorChange(color) {
 		carMaterial.color = color;
+		renderer.render(scene, $camera);
+	}
+
+	$: checkWireframeToggle($wireframe);
+	// @ts-ignore
+	function checkWireframeToggle(wireframe) {
+		carMaterial.wireframe = wireframe;
 		renderer.render(scene, $camera);
 	}
 
@@ -204,7 +207,7 @@
 			duration: 5,
 			ease: 'slow(0.7, 0.7, false)',
 			onStart: () => {
-				entryAnimationRunning.set(true);
+				animationRunning.set(true);
 			}
 		});
 
@@ -222,7 +225,7 @@
 						duration: 1,
 						ease: 'power1.out',
 						onComplete: () => {
-							entryAnimationRunning.set(false);
+							animationRunning.set(false);
 						}
 					});
 				}
@@ -255,7 +258,7 @@
 			duration: 1,
 			ease: 'power1.out',
 			onComplete: () => {
-				entryAnimationRunning.set(false);
+				animationRunning.set(false);
 			}
 		});
 
@@ -265,14 +268,17 @@
 	$: checkAnotherAnimation($anotherAnimation);
 
 	function checkAnotherAnimation(topView) {
-		if (!$entryAnimationRunning)
+		if (!$animationRunning)
 			if (topView) {
 				tl2.to($camera.position, {
 					x: 6.405749622402716,
 					y: 154.60780225324243,
 					z: -25.303750792579514,
 					duration: 4,
-					ease: 'slow(0.7, 0.7, false)'
+					ease: 'slow(0.7, 0.7, false)',
+					onStart: () => {
+						animationRunning.set(true);
+					}
 				});
 
 				tl2.to(
@@ -282,7 +288,10 @@
 						y: 7.806252873970862e-8,
 						z: 3.0634506242981008,
 						duration: 3,
-						ease: 'slow(0.7, 0.7, false)'
+						ease: 'slow(0.7, 0.7, false)',
+						onComplete: () => {
+							animationRunning.set(false);
+						}
 					},
 					'-=4'
 				);
@@ -293,7 +302,10 @@
 					y: 1,
 					z: 50,
 					duration: 2,
-					ease: 'slow(0.7, 0.7, false)'
+					ease: 'slow(0.7, 0.7, false)',
+					onStart: () => {
+						animationRunning.set(true);
+					}
 				});
 
 				tl3.to(
@@ -303,7 +315,10 @@
 						y: 0,
 						z: 0,
 						duration: 2,
-						ease: 'slow(0.7, 0.7, false)'
+						ease: 'slow(0.7, 0.7, false)',
+						onComplete: () => {
+							animationRunning.set(false);
+						}
 					},
 					'-=2'
 				);

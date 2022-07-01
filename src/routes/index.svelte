@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {
-		carColor,
-		entryAnimationRunning,
-		pauseAnimation,
-		anotherAnimation
-	} from '../store/stores';
+	import { carColor, pauseAnimation, anotherAnimation, wireframe } from '../store/stores';
 
 	let carModel;
 	onMount(async () => {
@@ -24,6 +19,12 @@
 
 	function toggleViewAnimation() {
 		anotherAnimation.set(!$anotherAnimation);
+	}
+
+	function toggleWireframe() {
+		wireframe.set(!$wireframe);
+		if ($wireframe) document.querySelector('#wireframeText').innerHTML = 'normal';
+		else document.querySelector('#wireframeText').innerHTML = 'wireframe';
 	}
 
 	onMount(() => {});
@@ -46,7 +47,17 @@
 			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#202124] text-center cursor-pointer font-bold text-xs"
 			on:click={() => toggleViewAnimation()}
 		>
-			view change
+			change view
+		</div>
+	</div>
+
+	<div class="avatar placeholder">
+		<div
+			id="wireframeText"
+			class="w-12 rounded-full ring ring-gray-400 ring-offset-base-100 ring-offset-1 bg-[#202124] text-center cursor-pointer font-bold text-[10px]"
+			on:click={() => toggleWireframe()}
+		>
+			wireframe
 		</div>
 	</div>
 </div>
